@@ -1,0 +1,11 @@
+{
+  "print" : ["printer_manager", "power_user", "ordinary_user"],
+  "queue" : ["printer_manager", "power_user", "ordinary_user"],
+  "topQueue" : ["printer_manager", "power_user"],
+  "start" : ["printer_manager", "service_technician"],
+  "stop" : ["printer_manager", "service_technician"],
+  "restart" : ["printer_manager", "service_technician", "power_user"],
+  "status" : ["printer_manager", "service_technician"],
+  "readConfig" : ["printer_manager", "service_technician"],
+  "setConfig" : ["printer_manager", "service_technician"]
+}

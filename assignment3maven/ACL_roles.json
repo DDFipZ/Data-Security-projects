@@ -1,0 +1,6 @@
+{
+  "printer_manager" : ["Alice"],
+  "service_technician" : ["Bob"],
+  "power_user" : ["Cecilia"],
+  "ordinary_user" : ["David", "Erica", "Fred", "George"]
+}
