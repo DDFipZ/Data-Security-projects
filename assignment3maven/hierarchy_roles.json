@@ -1,0 +1,21 @@
+{
+  "printer_manager": {
+    "children" : ["power_user", "service_technician"],
+    "methods" : []
+  },
+
+  "power_user" : {
+    "children" : ["ordinary_user"],
+    "methods" : ["topQueue"]
+  },
+
+  "service_technician" : {
+    "children" : ["ordinary_user"],
+    "methods" : ["start", "stop", "restart", "status", "readConfig", "setConfig"]
+  },
+
+  "ordinary_user" : {
+    "children" : [],
+    "methods" : ["print", "queue"]
+  }
+}

@@ -1,0 +1,11 @@
+@startuml
+PM as "Project Manager"
+PU as "Power User"
+ST as "Service Technician"
+OU as "Ordinary User"
+
+
+PM --> ST
+PM --> PU
+PU --> OU
+@enduml

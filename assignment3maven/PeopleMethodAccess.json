@@ -1,0 +1,11 @@
+{
+  "print" : ["Alice", "Cecilia", "David", "Erica", "Fred", "George"],
+  "queue" : ["Alice", "Cecilia", "David", "Erica", "Fred", "George"],
+  "topQueue" : ["Alice", "Cecilia"],
+  "start" : ["Alice", "Bob"],
+  "stop" : ["Alice", "Bob"],
+  "restart" : ["Alice", "Bob", "Cecilia"],
+  "status" : ["Alice", "Bob"],
+  "readConfig" : ["Alice", "Bob"],
+  "setConfig" : ["Alice", "Bob"]
+}

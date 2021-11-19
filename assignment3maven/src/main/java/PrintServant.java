@@ -14,6 +14,8 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.sql.Array;
+import java.util.ArrayList;
 
 public class PrintServant extends UnicastRemoteObject implements PrintService {
 
@@ -40,7 +42,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String print(String filename, String printer) throws RemoteException {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("print")) {
+		if(access == true && isAuthorizedRBAC("print")) {
 			access = false;
 			return "print: " + filename + " + " + printer;
 		}else
@@ -50,7 +52,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String queue(String printer) {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("queue")) {
+		if(access == true && isAuthorizedRBAC("queue")) {
 			access = false;
 			return "queue: " + printer;
 		}else
@@ -60,7 +62,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String topQueue(String printer, int job) {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("topQueue")) {
+		if(access == true && isAuthorizedRBAC("topQueue")) {
 			access = false;
 			return "topQueue: " + printer + " + " + job;
 		}else
@@ -70,7 +72,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String start() {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("start")) {
+		if(access == true && isAuthorizedRBAC("start")) {
 			access = false;
 			return "start";
 		}else
@@ -80,7 +82,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String stop() {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("stop")) {
+		if(access == true && isAuthorizedRBAC("stop")) {
 			access = false;
 			return "stop";
 		}else
@@ -90,7 +92,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String restart() {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("restart")) {
+		if(access == true && isAuthorizedRBAC("restart")) {
 			access = false;
 			return "restart";
 		}else
@@ -100,7 +102,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String status(String printer) {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("status")) {
+		if(access == true && isAuthorizedRBAC("status")) {
 			access = false;
 			return "status: " + printer;
 		}else
@@ -110,7 +112,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String readConfig(String parameter) {
 		// TODO Auto-generated method stub
-		if(access == true && isAuthorized("readConfig")) {
+		if(access == true && isAuthorizedRBAC("readConfig")) {
 			access = false;
 			return "readConfig: " + parameter;
 		}else
@@ -120,7 +122,7 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 	@Override
 	public String setConfig(String parameter, String value) {
 		// TODO Auto-generated method stub
-			if(access == true && isAuthorized("setConfig")) {
+			if(access == true && isAuthorizedRBAC("setConfig")) {
 				access = false;
 				return "setConfig: " + parameter + " + " + value;
 			}else
@@ -266,6 +268,41 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 				}
 			}
 			return false;
+	}
+
+	public JSONArray recursive(String usertype, JSONObject aclhierarchy){
+		JSONArray jsonArray = new JSONArray();
+			JSONObject jUser = (JSONObject) aclhierarchy.get(usertype);
+			JSONArray jMethods= (JSONArray) jUser.get("methods");
+			JSONArray jChildren = (JSONArray) jUser.get("children");
+			for (int i = 0; i < jMethods.size();i++){
+				jsonArray.add(jMethods.get(i));
+			}
+
+			if(jChildren.size() != 0){
+				for (int j = 0; j < jChildren.size();j++){
+					JSONArray childmethods = recursive((String) jChildren.get(j), aclhierarchy);
+					for (int k = 0;k < childmethods.size();k++){
+						jsonArray.add(childmethods.get(k));
+					}
+				}
+			}
+			return jsonArray;
+	}
+
+	private boolean isAuthorizedRBAC(String method) {
+
+		JSONObject aclhierarchy = getJSONFile("hierarchy_roles.json");
+		if(aclhierarchy.containsKey(this.usertype)){
+			JSONArray authorizedMethods = recursive(this.usertype, aclhierarchy);
+			System.out.println(authorizedMethods);
+			for(int i = 0;i < authorizedMethods.size();i++){
+				if(authorizedMethods.get(i).equals(method)){
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
 
