@@ -34,7 +34,6 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 		AddUser("Alice","a1234", "printer_manager");
 		AddUser("Bob","b1234", "service_technician");
 		AddUser("Charlie","c1234", "ordinary_user");
-		AddUser("marcus", "somepass", "printer_manager");
 
 
 	}
@@ -238,7 +237,6 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 		JSONObject jsonObject = getJSONFile("user_roles.json");
 		if(jsonObject.containsKey(username)){
 			this.usertype = (String) jsonObject.get(username);
-			System.out.println(this.usertype);
 		}
 	}
 
@@ -295,7 +293,6 @@ public class PrintServant extends UnicastRemoteObject implements PrintService {
 		JSONObject aclhierarchy = getJSONFile("hierarchy_roles.json");
 		if(aclhierarchy.containsKey(this.usertype)){
 			JSONArray authorizedMethods = recursive(this.usertype, aclhierarchy);
-			System.out.println(authorizedMethods);
 			for(int i = 0;i < authorizedMethods.size();i++){
 				if(authorizedMethods.get(i).equals(method)){
 					return true;

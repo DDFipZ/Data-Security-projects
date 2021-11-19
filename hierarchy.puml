@@ -1,5 +1,5 @@
 @startuml
-PM as "Project Manager"
+PM as "Printer Manager"
 PU as "Power User"
 ST as "Service Technician"
 OU as "Ordinary User"
